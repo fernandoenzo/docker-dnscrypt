@@ -1,0 +1,18 @@
+[Unit]
+Description=Docker DNSCrypt Proxy container
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+TimeoutStartSec=infinity
+TimeoutStopSec=10
+ExecStartPre=/usr/bin/docker run -d -it --init --rm -p 53:53/udp --name DNSCrypt --hostname DNSCrypt ghcr.io/fernandoenzo/dnscrypt:latest
+ExecStart=/usr/bin/docker logs -f DNSCrypt
+ExecStop=-/usr/bin/docker stop DNSCrypt
+SuccessExitStatus=143
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
