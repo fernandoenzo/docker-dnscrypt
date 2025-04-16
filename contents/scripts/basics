@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e  # Exit immediately if a command exits with a non-zero status.
+set -x  # All executed commands are printed to the terminal
+
+mv /tmp/contents/static/sid.sources /etc/apt/sources.list.d/
+mv /tmp/contents/static/sid.pref /etc/apt/preferences.d/
+
+aptitude update ; aptitude install -y dnsutils ; aptitude install -y -t sid dnscrypt-proxy
+
+mkdir -p /var/cache/dnscrypt-proxy /var/log/dnscrypt-proxy
+mv /tmp/contents/static/dnscrypt-proxy.toml /etc/dnscrypt-proxy/
+
+sed -i '$i dnscrypt-proxy -config /etc/dnscrypt-proxy/dnscrypt-proxy.toml &' /usr/local/boot
+
+apt-get -y autoremove ; aptitude -y autoclean ; apt-get -y autoclean
+rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.aptitude
+
