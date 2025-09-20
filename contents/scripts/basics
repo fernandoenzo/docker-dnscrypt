@@ -12,7 +12,7 @@ mkdir -p /var/cache/dnscrypt-proxy /var/log/dnscrypt-proxy
 mv /tmp/contents/static/dnscrypt-proxy.toml /etc/dnscrypt-proxy/
 
 sed -i '$i dnscrypt-proxy -config /etc/dnscrypt-proxy/dnscrypt-proxy.toml &' /usr/local/boot
+sed -i '$i bash -c '\''while true; do sleep 10; pgrep dnscrypt-proxy || killall -9 bash; done'\'' > /dev/null 2>&1 &' /usr/local/boot
 
 apt-get -y autoremove ; aptitude -y autoclean ; apt-get -y autoclean
 rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.aptitude
-
